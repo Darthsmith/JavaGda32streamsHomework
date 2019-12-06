@@ -36,18 +36,18 @@ public class OlympicsStatisticsService {
     }
 
     //znajdzie państwo które zdobyło najwięcej medali (w sumie)
-    public LinkedHashMap<String,Integer> countryThatGotTheMostMedals(final Collection<OlympicsData> data) {
+    public LinkedHashMap<String, Integer> countryThatGotTheMostMedals(final Collection<OlympicsData> data) {
         return data.stream()
 //                .map( medalsCombined -> medalsCombined.getGoldenMedalsAmount()+medalsCombined.getSilverMedalsAmount()+medalsCombined.getBronzeMedalsAmount() )
                 .collect( Collectors.toMap(
                         countryShortName -> countryShortName.getCountryShortName(),
                         medalsCombined -> medalsCombined.getGoldenMedalsAmount()
                                 + medalsCombined.getSilverMedalsAmount()
-                                + medalsCombined.getBronzeMedalsAmount()) )
+                                + medalsCombined.getBronzeMedalsAmount() ) )
                 .entrySet().stream()
-                .sorted(Map.Entry.comparingByValue())
-                .collect(Collectors.toMap( stringIntegerEntry -> stringIntegerEntry.getKey(), Map.Entry::getValue,
-                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+                .sorted( Map.Entry.comparingByValue() )
+                .collect( Collectors.toMap( stringIntegerEntry -> stringIntegerEntry.getKey(), Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new ) );
     }
 
     //najwięcej 4tych miejsc - ostateczna metoda
@@ -75,21 +75,21 @@ public class OlympicsStatisticsService {
     // więcej srebrnych od złotych
     public List<String> moreSilverMedalsThanGolden(final Collection<OlympicsData> data) {
         return data.stream()
-                .filter( list-> list.getSilverMedalsAmount() > list.getGoldenMedalsAmount())
+                .filter( list -> list.getSilverMedalsAmount() > list.getGoldenMedalsAmount() )
                 .map( olympicsData -> olympicsData.getCountryShortName() )
                 .collect( Collectors.toList() );
     }
 
     public List<String> moreBronzeThanSilverAndSilverThanGold(final Collection<OlympicsData> data) {
         return data.stream()
-                .filter( list-> (list.getBronzeMedalsAmount() > list.getSilverMedalsAmount())
-                        && list.getSilverMedalsAmount() > list.getGoldenMedalsAmount())
+                .filter( list -> (list.getBronzeMedalsAmount() > list.getSilverMedalsAmount())
+                        && list.getSilverMedalsAmount() > list.getGoldenMedalsAmount() )
                 .map( olympicsData -> olympicsData.getCountryShortName() )
                 .collect( Collectors.toList() );
     }
 
 
-    public Map<String,Integer> howManyMedalsEachCountryGot(final Collection<OlympicsData> data) {
+    public Map<String, Integer> howManyMedalsEachCountryGot(final Collection<OlympicsData> data) {
         return data.stream()
                 .collect( Collectors.toMap(
                         countryShortName -> countryShortName.getCountryShortName(),
@@ -97,21 +97,21 @@ public class OlympicsStatisticsService {
                                 + medalsCombined.getSilverMedalsAmount()
                                 + medalsCombined.getBronzeMedalsAmount() ) )
                 .entrySet().stream()
-                .collect( Collectors.toMap(countryName -> countryName.getKey(), medalsAmount -> medalsAmount.getValue()) );
+                .collect( Collectors.toMap( countryName -> countryName.getKey(), medalsAmount -> medalsAmount.getValue() ) );
     }
+
     // dominanta złotych medali
     //działa nie do końca
-    public Map.Entry<Integer, List<List<OlympicsData>>> goldenMedalsDominant(final Collection<OlympicsData> data){
+    public Map.Entry<Integer, List<List<OlympicsData>>> goldenMedalsDominant(final Collection<OlympicsData> data) {
 
         final var groupingByGoldenMedals = data.stream()
-                .collect( Collectors.groupingBy( goldenMedalsAmount -> goldenMedalsAmount.getGoldenMedalsAmount()) );
+                .collect( Collectors.groupingBy( goldenMedalsAmount -> goldenMedalsAmount.getGoldenMedalsAmount() ) );
 
         var groupByGoldenMedalsAmountOcurrence = groupingByGoldenMedals.values().stream() // <{1,1,1},{2,2,2},{3,3},{4,4,4,4}>
                 .collect( Collectors.groupingBy( goldenMedalsOcurrence -> goldenMedalsOcurrence.size() ) ).entrySet();
 
-        return Collections.max( groupByGoldenMedalsAmountOcurrence, Comparator.comparing(x -> x.getKey()) );
-                //największa ilośc wystąpień tego samego goldenMedalAmounts
-
+        return Collections.max( groupByGoldenMedalsAmountOcurrence, Comparator.comparing( x -> x.getKey() ) );
+        //największa ilośc wystąpień tego samego goldenMedalAmounts
     }
 
 
